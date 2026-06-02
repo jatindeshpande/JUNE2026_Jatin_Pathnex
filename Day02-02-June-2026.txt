@@ -1,0 +1,40 @@
+Today we went through Linux cmds
+
+Neeraj asked us to go through previous batch Linux video
+
+Writing cmds which we encountered
+
+cd - change dir
+pwd - present working directory
+ls - list
+ls -la  - l = long listing format, a = show all files
+ls -lahrt   - l = long listing format, a = show all files, h = human readable size, r = reverse the sort order, t = sort by modification time
+
+rename in Linux
+mv file.txt file1.txt
+
+move file to a certain directory
+mv file.txt /home/ec2-user/docs
+
+
+d  rwx      r-x      r-x
+   owner    group    other
+   4+2+1    4+1      4+1
+     7       5        5
+
+ 
+R = Read = 4   - Kam time
+W = Write = 2  - Thoda jyada time
+X = Xecute = 1 - Sabse jyada time
+
+
+To change the rwx permissions - chmod 777 dirname
+To change the ownership - chown
+To change the group - chgrp
+
+To change owner and groupname
+chown owner:group filename
+
+
+.  means current dir
+.. parent dir
