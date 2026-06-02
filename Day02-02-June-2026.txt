@@ -38,3 +38,12 @@ chown owner:group filename
 
 .  means current dir
 .. parent dir
+
+Hard Link
+lets say we create a file in a sub directory, and create a HardLink with it in the Main dir. Then what ever changes
+happen in the sub-directory will get updated in main directory file as well.
+If sub-dir file deleted still main dir file will stay there.
+
+Soft Link
+Soft link acts as a shortcut between main dir file and sub-dir file. If sub-dir file is deleted then main-dir 
+file will be in-accessible.
