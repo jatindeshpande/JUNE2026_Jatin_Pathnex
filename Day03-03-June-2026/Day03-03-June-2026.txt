@@ -1,0 +1,92 @@
+Topic: 1
+Types of IP addresses 
+
+1. IPv4 vs IPv6
+IPv4: 32bit addresses
+eg: 192.168.1.10
+
+IPv6: 128bit addresses
+eg: 2001:0db8:85a3::8a2e:0370:7334
+
+
+2. Public vs Private IP
+Public IP: 
+Routable on the internet
+Assigned by ISP or Cloudprovider.
+eg: 49.36.x.x
+
+Private IP: 
+Used within Private networks
+
+10.0.0.0/8  -      10.0.0.0/8 to 10.255.255.255
+172.16.0.0/12 -    172.16.0.0  to  172.31.255.255
+192.168.0.0/16 -   192.168.0.0  to 192.168.255.255
+
+
+3. Static IP vs Dynamic IP
+Static:
+Fixed IP addresses, does not change
+Common for servers, Load balancers, DNS servers
+
+Dynamic:
+Assigned automatically by DHCP
+May change over time
+Common for laptops and home internet
+
+4. Special IPs 
+Loopback ips 
+Used by machines to communicate with itself
+127.0.0.1
+
+Hostname: Local
+
+APIPA: Automatic private IP addressing
+Assigned when DHCP server is unavailable
+Range: (169.254.0.0/16) 
+
+
+5. Unicast, Broadcast, Multicast
+Unicast: One sender one receiver
+
+Broadcast(IPv4 only)
+One sender -> All hosts in subnet
+
+Multicast
+One sender -> Multiple interested receivers
+Used for: Video streaming and routing protocols 
+
+Topic 2: 
+Linux Cmds
+
+ls - list
+cd - change directory
+pwd - present working directory
+mkdir - make directory
+rm    - remove files
+rm -rf  - remove files recurssively and force
+cp   - copy paste
+mv  - move/rename files and directories
+
+
+touch - create file or update timestamp
+cat   - view contents of file
+head   - Displays first few lines of file
+head -   head -n 5 file.txt  -  displays first 5 lines of file
+tail -   tail -n 5 file.txt  -  displays last 5 lines of file 
+
+
+tar - used to  archive files
+gzip - is used to compress the files
+
+find - search files and directories
+
+ps - displays running process
+top - gives us real time system process
+kill - used to kill a process
+grep - used to  search for certain pattern words
+umask - used to set default permissions in system
+df - disk space
+du - estimate file and directory sizes
+whoami - display current username
+cronjob - to automate and run jobs after certain amount of time
+load average - average taken of last 1, 5 and 15 mins of resource utilization
