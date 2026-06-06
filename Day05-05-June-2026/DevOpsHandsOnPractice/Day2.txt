@@ -1,0 +1,57 @@
+## Day2 services and tags
+
+## Ansible - Install and enable Nginx
+---
+- name: Install and enable Nginx
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Intall Nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+## Terraform EC2 (r5.2xlarge) with tags
+
+provider "aws" {
+    region = "us-east-2"
+}
+
+resource "aws_instance" "pathnex" {
+  name = "webserver"
+  ami  = "ami-123556fssf54655"
+  instance_type = "r5.2xlarge"
+
+  tags = {
+    Name = "webserver"
+    Environment = "Training"
+    Owner = "Pathnex-student"
+  }
+}
+
+## Kubernetes Deployment with 2 replicas
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pathnex-deployment
+spec: 
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pathnex-app
+  template:
+    metadata:
+      labels:
+        app: pathnex-app
+    spec:
+      - name: app
+        image: nginx:latest
+        ports:
+          - containerPort: 80      
