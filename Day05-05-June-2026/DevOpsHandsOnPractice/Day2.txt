@@ -93,7 +93,6 @@ pipeline {
 }
 
 ## Gitlab CI - Maven build
-
 stages:
   - build
   - test
