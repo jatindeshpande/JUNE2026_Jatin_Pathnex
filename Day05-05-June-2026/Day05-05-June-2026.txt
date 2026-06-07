@@ -1,0 +1,65 @@
+Git
+
+Git fetch and git pull explain ?
+Git fetch will download the changes from remote repo and bring it to local but wont merge them. 
+No merge conflicts
+
+Git pull with directly pull the remote changes into local and merge them and would cause merge conflicts if any.
+-----------
+Protected Branches: These branches wont accept your push. You will have to raise a PR and get approval then
+only merge into them.
+-----------
+git branch pathnex   - to create a new branch in local
+git checkout pathnex  - to checkout new branch
+
+or 
+
+git checkout -b pathnex  - it will create branch and checkout into it
+-----------
+
+How can you make 5 commits into 1 commit ?
+
+1. - Start by interactive rebase 
+Tell Git you want to look at last 5 commits on your branch:
+cmd: git rebase -i HEAD~5
+
+
+2. Edit the ToDo list
+A text editor will open displaying your last 5 commits. Like below
+
+pick a1b2c3d Commit message 1 (oldest)
+pick e5f6g7h Commit message 2
+pick i9j0k1l Commit message 3
+pick m3n4o5p Commit message 4
+pick q7r8s9t Commit message 5 (newest)
+
+3. Change the word pick to squash (or just s) for the bottom 4 commits. Leave the very first commit as pick.
+
+pick a1b2c3d Commit message 1
+squash e5f6g7h Commit message 2
+squash i9j0k1l Commit message 3
+squash m3n4o5p Commit message 4
+squash q7r8s9t Commit message 5
+
+4. Rewrite the combined Commit Message
+A second text editor window will open. It will show commit messages of all 5 individual commits combined together.
+
+Delete all the old text you do not want.
+Type your brand new, single commit message.
+Save and close the editor.
+
+Git will output a success message: Successfully rebased and updated
+
+------------
+Git rebase 
+
+When a reviewer looks at your Pull Request on GitHub or GitLab, they want to see exactly what you built.
+
+-If you merged main into your branch, the commit history will show your teammate's commits mixed in with yours chronologically.
+-If you rebased on main, all of your unique feature commits sit cleanly at the very top of the list, making it incredibly easy for the reviewer to follow your logic step-by-step.
+
+
+commands: 
+git add files
+git commit -m "Message about commit"
+git push origin master
