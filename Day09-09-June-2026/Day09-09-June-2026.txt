@@ -1,0 +1,42 @@
+* If instances are in different VPCs how to connect them ?
+Answer: Using VPC peering or using Transit Gateway.
+
+Steps for VPC peering:
+1. Go to VPC console, click Peering connections
+   Create Peering connections
+   Select requestor and selector VPC.
+
+2. Accept peering request 
+   If both VPCs belong to same account accept the request in same account.
+
+   If belong to different account let the user in other account accept it.
+   Then update route-tables. And NACL, SG
+
+Steps for Transit Gateway peering:
+1. Open VPC console click TGW and click to Create Transit Gateway.
+
+2. Create Transit Gateway Attachment
+
+3. Associate the Attachments with TGW route table
+
+4. Add TGW Route Table entries
+
+5. Update VPC route tables
+
+Differece between VPC peering and Transit Gateway
+
+| Feature            | VPC Peering          | Transit Gateway           |
+| ------------------ | -------------------- | ------------------------- |
+| Scalability        | Low                  | High                      |
+| Transitive Routing | ❌ No                 | ✅ Yes                     |
+| Hub-and-Spoke      | ❌ No                 | ✅ Yes                     |
+| Max Connections    | Limited              | Thousands of VPCs         |
+| Route Management   | Manual for each pair | Centralized               |
+| Best For           | 2–3 VPCs             | Large enterprise networks |
+
+
+How to host a website on S3 ?
+Answer: Create an S3 bucket with unique name.
+Add all the static files i.e. HTML, CSS, JS etc files. 
+Go to the bucket properties and select S3 bucket Web Hosting, enable it.
+Allow public access to the bucket and add bucket policy for public read.
