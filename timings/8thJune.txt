@@ -1,0 +1,12 @@
+8th June 2026
+Will do
+12 PM-1PM - Revise the topics taught today and make notes and push to branch and raise PR
+2:30 PM - 3 PM - Write definitions and differences of topics like 
+logs vs metrics vs traces
+weighted vs latency based
+CNAME vs AAAA vs A
+
+
+Done
+12PM-1PM - Topics revised and jotted the pointers.
+2:30 - 3:15 Above topics covered

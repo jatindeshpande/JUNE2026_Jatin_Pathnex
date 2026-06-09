@@ -1,0 +1,109 @@
+Today we learnt about 
+1. Session Manager
+Secure shell access to EC2 without needing SSH/RDP
+Key Points: Remote access without need of inbound ports
+Logging and editing for session activity
+Allows access to instance in private subnet, no need for public ip
+Integrates with Systems Manager for Automation
+
+2. Route 53
+DNS service for routing traffic to resource
+
+Key Points: Domain registration and DNS routing management
+Configures routing policies based on simple routing policy, weighted policies, latency-based policy, geolocation policy.
+Its is used for Health checks and DNS failover to improve availabiltiy.
+Integrates with CloudFront and ALB for dynamic routing.
+
+3. CloudTrail
+Monitors and records AWS API calls.
+
+Key Points: Tracks changes made to AWS resources and user activities.
+Logs are stored in S3 for security and analysis
+Integrates with CloudWatch for real-time monitoring.
+
+
+4. CloudWatch
+Monitoring and observability service for AWS resources.
+
+Key Points: Collects logs, metrics and events from AWS resources.
+Setup alarms to trigger automated actions.
+Integrates with Auto Scaling and Lambda for automated actions.
+Helps in visualized resources and observe performance and health status.
+
+5. Auto-Scaling:
+Automatically adjusts resources and meet demand.
+
+Key Points: Scales EC2 machines and other resources on basis of real time needs.
+
+6. Lambda: 
+Serverless compute service on AWS which runs code in resonce to external events.
+
+7. AWS Shield:
+DDoS protection for AWS service.
+Shield standard automatically protects AWS customers
+Shield Advanced offers enahanced protection from real-time threats
+Protects resources like CloudFront, Route 53, ALB
+
+8. AWS WAF:
+Protects web application from common security threats.
+
+Key Points: Customizable rules to filter malicious web traffic.
+Protects against cross-site scripting and SQL injection and bots
+Provides real time logging of web traffic pattern
+Integrates with CloudFront ALB and API Gateway
+
+9. Amazon GuradDuty
+Threat detection service in AWS.
+Continuously monitors AWS accounts for suspicious activity
+Detects and notifies of threats if any using ML.
+
+10. Amazon Inspector
+Automated vulnerability management service for AWS workloads
+
+Key Points: Continuously scans AWS workloads (EC2 instances, container images, and Lambda functions) for security vulnerabilities.
+Helps detect CVE - Common Vulnerability Exposures and resolve.
+
+-----------------------------------------------
+Types of records
+
+Record Type                  Purpose                                 Example
+A                      Maps record to IPv4 address              app.example.com -> 53.25.33.68
+AAAA                   Maps record to IPv6 address              app.example.com -> 2001:db8::1
+CNAME                  Maps hostname to another hostname        www.example.com -> app.example.com
+Alias                  AWS specific record that points to       example.com -> ALB
+                        AWS resource like ALB, CloudFront,
+                        S3, API Gateway
+MX                     Defines mail servers to receive emails   example.com -> mail.example.com
+
+TXT                    Stores text data for domain verification,    google verification
+                         SPF, DKIM, DMARC
+
+**Routing policy
+1. Simple Routing Policy
+Default routing policy. Routes traffic to single resource. 
+No health checks or load balancing
+
+2. Weighted Routing Policy
+Distributes traffic based on assigned weights.
+Useful for canary deployment
+Version1 -> 80%
+Version2 -> 20%
+
+3. Latency Based Routing Policy
+Routes user to the region with lowest network latency
+
+4. Failover Routing
+Used for Active-Passive DR Setup
+Requires health checks
+
+5. Geolocation routing 
+Routes traffic based on user's geographic location
+
+What is a Hosted Zone ?
+A Hosted Zone is a collection of DNS records for a domain in Route 53. 
+It acts as a container that tells DNS resolvers how to route traffic for that domain or its subdomains.
+
+Example
+Domain: example.com
+HostedZone: It is a folder containing all the DNS records for example.com
+DNS Records → Individual entries like A, CNAME, MX, TXT, and Alias that define where traffic should go.
