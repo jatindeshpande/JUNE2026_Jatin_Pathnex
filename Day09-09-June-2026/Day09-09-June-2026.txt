@@ -28,8 +28,8 @@ Differece between VPC peering and Transit Gateway
 | Feature            | VPC Peering          | Transit Gateway           |
 | ------------------ | -------------------- | ------------------------- |
 | Scalability        | Low                  | High                      |
-| Transitive Routing | ❌ No                 | ✅ Yes                     |
-| Hub-and-Spoke      | ❌ No                 | ✅ Yes                     |
+| Transitive Routing | No                   | Yes                       |
+| Hub-and-Spoke      | No                   | Yes                       |
 | Max Connections    | Limited              | Thousands of VPCs         |
 | Route Management   | Manual for each pair | Centralized               |
 | Best For           | 2–3 VPCs             | Large enterprise networks |
