@@ -1,0 +1,147 @@
+Docker is an open-source platform that allows to automate deployment, scaling and management 
+of applications inside lightweight portable containers.
+
+1. Containers: Containers are a way to package application and its dependencies in a consistent 
+environment regardless of host Systems. They ensure application works in same way as in any 
+environment (Dev, Test, QA, Production) because their application is containerized.
+
+Containers are isolated from host but use Hosts kernel, making them light weight compared to traditional virtual machines.
+
+2. DockerFile: 
+A Dockerfile is a script containing series of instructions on how to build a docker image.
+It specifies: 
+From which base image to use
+Dependencies to be copied then the source code that has to be copied
+How to install dependencies
+Cmds to run the docker container
+
+Eg:
+FROM alpine:node-12 
+WORKDIR /user/pathnex
+COPY . .
+RUN npm install
+EXPOSE 3000
+CMD["npm", "start"]
+
+3. Images
+Docker image is a read-only template that contains source code, runtime, dependencies, libraries,
+environment variables etc.
+
+4. Docker Engine
+Docker Engine is the core component that runs docker containers.
+It is a client server application. And has 3 main components
+
+It has 3 components
+1. Docker Daemon: Docker daemon is the service which runs in the background and manages the
+container, images, network, storage volumes. Daemon name = Containerd
+
+2. Docker CLI: CLI that allows users to interact with Docker daemon
+
+3. REST API: Allows external programs to interact with Docker and manage Containers.
+
+
+5. Docker Compose: Docker compose is a tool for defining and running multi-container Docker 
+applications.
+
+version: '3' 
+services: 
+  web: 
+    image: nginx 
+    ports: - "8080:80" 
+  db: 
+    image: sql 
+    environment: 
+      MYSQL_ROOT_PASSWORD: pathnex 
+
+6. Docker Registry/ECR: A Docker registry is where we can store docker images.
+A registry allows us to push and pull images. DockerHub is popular one.
+ECR is private registry by AWS.
+
+7. Networking in Docker:
+Docker containers are isolated by default, you can control how they communicate with each other
+and outside world. 
+
+Network types in Docker
+1. Bridge Network: 
+- Containers on the same bridge network can communicate with each other.
+- Each container gets a separate ip address.
+- External access requires port mapping
+
+2. Host Network:
+Here the container doesn't have separate ip address. It utilizes host ip to communicate.
+No separate container ip and the application listens on host ip.
+
+3. None Network:
+Here the containers are completely isolated and does not have access to internet or cannot 
+communicate with other containers.
+
+4. Overlay Network:
+Overlay network is used for multi-host container communication.
+- Connects with containers running on different hosts.
+- Requires docker swarm(orchestration) or Kubernetes like orchestration
+
+
+8. Volumes
+Volumes are used for persistent storage in Docker containers. By default, all data in a 
+container is ephemeral (i.e., lost when the container is removed), but volumes allow 
+you to persist data across container restarts or even container removals. Volumes can 
+also be shared between containers. 
+
+Benefits of Docker
+Portability- Containers run the same way irrespective of host systems 
+Efficiency - Containers are light weight and start up quickly
+Isolation - the containers are isolated from each other and host system reducing dependency 
+conflicts.
+
+Version controlled - Docker images are versioned, so you can easily rollback to previous
+version
+CICD integration - Docker integrates well with CICD pipelines.
+
+RUN VS CMD VS ENTRYPOINT
+
+RUN: 
+RUN is used to execute commands while building the images
+RUN cmd creates a new layer.
+RUN is used to install packages and creating directories
+
+CMD                                                 ENTRYPOINT
+CMD specifies default cmd/arguments   |  ENTRYPOINT specifies the main executable that 
+when the container starts             |  that has to run when container starts
+                                      |
+Can be overridden by arguments passed |  ENTRYPOINT remains fixed unless, overridden by
+to docker run                         |  --entrypoint 
+
+CMD doesn't create a layer, it stores |  ENTRYPOINT doesnot create a layer, it stores
+default startup command               |  startup executable
+
+
+
+
+COPY vs ADD
+
+COPY                                                 ADD
+Copy can copy files and directories    |    ADD can copy files and directories as well
+COPY cannot copy/download from URLs    |    ADD can download files from URLs
+                                       |    ADD can automatically extract local .tar archives
+COPY cannot automatically extract      |
+local .tar archives
+
+
+
+
+Practice docker 
+https://github.com/pathnex/pathnex-docker.git
+
+What is multistaged dockerfile ?
+A multi-staged dockerfile uses multiple FROM statements to separate build environment
+with runtime environment. In runtime the build executables/binaries are pushed so size reduces.
+It reduces the image size.
+Removes unnecessary build tools
+
+
+Steps to optimize Docker images
+1. Use smaller base images like alpine
+2. Use multi-stage Docker files
+3. Combine RUN cmds rather than running them separately
+4. Use .dockerignore to avoid un-necessary files in docker builds
+5. Use COPY instead of ADD cmd, it is lighter.

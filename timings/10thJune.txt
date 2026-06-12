@@ -1,0 +1,3 @@
+6:00 AM to 8:15 AM - Class - Kubernetes
+10:30 AM to 11:30  - Revision Docker 
+2:00 PM - 3:30 PM - Docker notes + Docker interview practice
