@@ -1,0 +1,65 @@
+Topic: Kubernetes
+
+Scale-in and Scale-out - That is decrease or increase of size.
+
+a. Horizontal Scaling: Horizontal Scaling increasing of number of instances.
+b. Vertical Scaling: Vertical scaling means increasing or decreasing the power/size of instances.
+
+**Kubernetes is an open-source container orchestration platform used to automate the 
+deployment, scaling, and management of containerized application.
+
+Kubernetes Arhitecture:
+Control Plane and Worker Plane
+
+Control Plane: Control plane is responsible for the management of EKS cluster.
+It takes decision about managing cluster viz scheuling, when and where to run pod or 
+managing the desired state of cluster.
+
+Data Plane: Data plane contains worker nodes which run pods and containers on top of it.
+
+Explain Kubernetes architecture
+API-server: 
+API server is the entry point or way for users to interact with the EKS cluster.
+It serves as a communication hub for all K8s components like workers, etcd, controller, etc
+
+Scheduler: Scheduler tracks the newly created pods which have no assigned nodes and then 
+places them on suitable worked nodes.
+Scheduler considers CPU, memory and affinity rules to decide where to deploy pod.
+
+etcd: ETCD is a key-pair like data store for Kubernetes which stores cluster's state data. 
+It is crucial component for storing desired state of cluster.
+
+controller-manager: The controller manager ensures that the current state of the system 
+matches the desired state. It continuously watches for changes and takes corrective actions.
+
+Cloud-controller-manager: Manages cloud-specific components, such as load balancers and storage 
+volumes, if your Kubernetes cluster is running in a cloud environment (AWS, GCP, Azure). 
+
+
+##Some controllers
+ReplicaSet Controller: (ensures the desired number of replicas for pods are maintained)
+Deployment Controller (manages deployments)
+Job Controller (handles batch jobs). 
+Node Controller (handles node lifecycle).
+
+Worker nodes: Worker nodes (also known as Minions) are where the actual application workloads 
+(containers) run. Each node runs several important components that allow them to run the 
+desired applications. 
+
+kubelet: Kubelet is an agent running in each worker node which makes sure containers are
+running properly inside the pods and as per desired state.
+kubelet communicates with the API server to ensure the nodes and pods are properly configured. 
+
+kubeproxy: The kube-proxy is responsible for maintaining network rules on each node. It 
+allows pods to communicate with each other and with services inside the 
+cluster.
+
+Namespaces: Namespaces are used to divide cluster resources into separate virtual environments 
+within the same Kubernetes cluster. 
+
+Interview question:
+What are default Namespaces in EKS ?
+- default: Used if no namespace is specified while creating resources. 
+- kube-system:  Contains system components like DNS, scheduler, controller manager, etc.
+- kube-public: Accessible to all users; mainly for public cluster information.
+- kube-node-lease: Used for node heartbeat and node availability tracking
