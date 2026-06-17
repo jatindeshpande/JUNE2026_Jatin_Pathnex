@@ -1,0 +1,50 @@
+ArgoCD:
+Argo CD stands for Argo Continuous Delivery.
+It is a declarative Gitops tool for Kubernetes.
+ArgoCD continuously monitors the Git repository and automatically syncs the changes to Kubernetes cluster.
+
+It automates application deployment, rollback and drift detection.
+Provides both CLI and web UI.
+
+Core Concepts of ArgoCD
+GitOps: That is Git is the single source of truth.
+Application: What has to be deployed and where and how.
+
+Sync: ArgoCD compares the actual state (cluster) and desired state (git)
+If there's a difference, it syncs automatically or manually.
+
+Health Status: Healthy, Degraded, Progressing, Missing
+
+Sync Status: Synced, OutOfSync, Unknown
+
+ArgoCD Architecture
+1. API Server: Handles CLI/UI/API communication. It handles authentication, RBAC, user invoked operations 
+like syncing and rolling back.
+
+2. Repository Server: Clones and reads Git repositories.
+
+3. Application Controller: Reconciles desired state with the live cluster.
+
+4. Dex(optional): Provides authentication (SSO, LDAP etc)
+
+Sync Strategies: 
+Manual Sync: You click on Syncor run sync cmd manually to sync changes.
+
+Automatic Sync: 
+Self heal: Fix drift if someone changes resources manually.
+Prune: Deletes resources that were removed from Git.
+
+yaml
+syncPolicy:
+  automated:
+    selfHeal: true
+    prune: true
+
+
+Common ArgoCD commands:
+kubectl get pods -n argocd                                       - Check argocd pods
+kubectl port-forward svc/argocd-server -n argocd 8080:443        - Access ArgoCD UI
+
+argocd app create                                                - Create a new app
+argo cd app sync <app-name>                                      - Trigger sync
+argocd app delete <app-name>                                     - Delete app
