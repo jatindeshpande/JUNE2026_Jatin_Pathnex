@@ -80,13 +80,13 @@ pipeline {
     post {
         success {
             email to: 'team@pathnex.com'
-            Subject: Pipeline succeeded
-            Body: The pipeline has completed and build number is ${env.BUILD_NUMBER}
+                Subject: Pipeline succeeded
+                Body: The pipeline has completed and build number is ${env.BUILD_NUMBER}
         }
         failure {
             email to: 'team@pathnex.com'
-            Subject: Pipeline failed
-            Body: The pipeline has failed and build number is ${env.BUILD_NUMBER}
+                Subject: Pipeline failed
+                Body: The pipeline has failed and build number is ${env.BUILD_NUMBER}
         }
     }
 }
