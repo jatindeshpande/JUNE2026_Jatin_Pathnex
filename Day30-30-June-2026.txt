@@ -1,0 +1,108 @@
+Day 11 - Database, Outputs, Sidecars, Functions
+
+## Ansible - Install Maria DB
+
+---
+ - name:Install Maria DB for Pathnex
+   hosts: all
+   become: yes
+
+   tasks:
+     - name: Install MariaDB
+       yum:
+         name: mariadb-server
+         state: present
+    
+      - name: Start MariaDB
+        service:
+          name: mariadb
+          state: started
+          enabled: yes
+
+## Terraform - Output public ip (r5.2xlarge)
+
+resource "aws_instance" "PathnexServer" {
+    ami = "ami-124564efsf55454"
+    instance_type = "r5.2xlarge"
+
+    tags = {
+        Name = "Pathnex-Server"
+    }
+}
+
+output "PathnexPublicIP" {
+    value = aws_instance.PathnexServer.public_ip
+}
+
+## Kubernetes - Sidecar container
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pathnex-sidecar
+spec:
+  containers:
+    - name: main
+      image: nginx
+    - name: sidecar
+      image: busybox
+      cmd: ["sh" "-c" "echo sidecar running; sleep 3600"]
+
+## 🔹 Shell Script — Function Example
+
+#!/bin/bash
+
+greet() {
+    echo "Welcome to Pathnex training"
+}
+
+greet
+
+## Notifications 
+You will learn to send notifications on failure or success of pipeline 
+
+pipeline {
+    agent any
+    environment {
+        INSTITUTE_NAME = "pathnex"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git url 'https://github.com/Pathnex/sample-java-app.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+    }
+    post {
+        success {
+            email to: 'team@pathnex.com'
+            Subject: Pipeline succeeded
+            Body: The pipeline has completed and build number is ${env.BUILD_NUMBER}
+        }
+        failure {
+            email to: 'team@pathnex.com'
+            Subject: Pipeline failed
+            Body: The pipeline has failed and build number is ${env.BUILD_NUMBER}
+        }
+    }
+}
+
+## GitLab CI - Notifications
+
+stages:
+  - build
+
+build:
+  stage: build
+  image: maven:3.8.1-openjdk-17
+  script: 
+    - git clone 'https://github.com/Pathnex/sample-java-app.git'
+    - cd sample-java-app
+    - mvn clean compile
+  
+  after_script:
+    - echo "Send notification email to team@pathnex.com" 
