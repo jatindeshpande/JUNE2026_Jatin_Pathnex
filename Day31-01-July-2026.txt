@@ -1,0 +1,119 @@
+# Day 12 — File Content, RDS Skeleton, Rolling Update, Backup
+
+## Ansible - Ensure File with Content
+
+---
+- name: Write config File
+  hosts: all
+  become: yes
+
+  tasks: 
+    - name: Write content to File
+      copy: 
+        destination: etc/pathnex.conf
+        content: |
+          Welcome to Pathnex DevOps Training
+          Today is Day 12
+
+## Terraform - RDS Skeleton
+
+resource "aws_db_instance" "PathnexDB" {
+    allocated_storage = 20
+    engine            = "mysql"
+    instance_class    = "db.t3.micro"
+    name              = "pathnexdb"
+    username          = "admin"
+    password          = "Admin@123"
+    skip_final_snapshot    = true
+}
+
+## Kubernetes — Rolling Update Strategy
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:pathnex-rolling
+spec:
+  replicas: 3
+  strategy: 
+    type: RollingUpdate
+    rollingupdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  
+  selector:
+    matchLabels:
+      app: roll
+
+  template:
+    metadata:
+      labels:
+        app: roll
+    
+    spec:
+      - containers:
+        name: web
+        image: nginx
+
+## Shell script backup directory
+
+#!/bin/bash
+
+SOURCE="/var/log"
+DEST="/backup/pathnex-$(date +%f).tar.gz"
+
+tar -czf $DEST $SOURCE
+
+echo "Backup created at: $DEST"
+
+# Multi-branch Pipelines
+
+## Jenkins Pipeline — Multi-branch
+You will learn how to **handle multiple branches in Jenkins pipelines**.
+
+pipeline {
+  agent any
+  environment {
+    INSTITUTE_NAME="pathnex"
+  }
+  stages {
+    stage('Checkout') {
+      when {
+        branch 'dev'
+      }
+      steps {
+        checkout scm
+      }
+    }
+    stage('Build') {
+      when {
+        branch 'dev'
+      }
+      steps {
+        sh 'mvn clean compile'
+      }
+    }
+  }
+}
+
+## GitLab CI — Branch Specific Jobs
+You will learn how to **run jobs for specific branches in GitLab CI**.
+
+stages:
+  - build
+
+build-main:
+  stage: build
+  image: maven:3.8.1-openjdk-17
+  script: 
+    - mvn clean compile
+  only:
+    - main
+
+build-dev:
+  stage: build
+  image: maven:3.8.1-openjdk-17
+  script:
+    - mvn clean compile
+  only:
+    - dev
