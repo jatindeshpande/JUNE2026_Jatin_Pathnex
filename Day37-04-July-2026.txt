@@ -1,0 +1,114 @@
+# Day 18 — Facts, Variables, Affinity, Log Archiving
+
+## Ansible — Use Ansible Facts
+
+---
+- name: Show system facts for Pathnex
+  hosts: all
+
+  tasks: 
+    - name: Show OS info
+      debug:
+        var: ansible_facts['os_family']
+
+    - name: Show ip-address
+      debug:
+        var: ansible_facts['default_ipv4']['address'] 
+
+
+## Terraform — Variables, Outputs, tfvars
+
+variables.tf
+variables "instance_type" {
+    default = "m5.2xlarge"
+}
+
+main.tf
+
+resource "aws_instance" "PathnexEC2" {
+    ami = "ami-123456g65g4455"
+    instance_type = var.instance_type
+}
+
+output.tf
+
+output "publicIP" {
+    value = aws_instance.PathnexEC2.public_ip
+}
+
+## Kubernetes — Node Affinity
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pathnex-affinity
+
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                  - ssd
+
+  containers:
+    - name: web
+      image: nginx
+
+## Shell Script — Archive Log Files
+
+#!/bin/bash
+
+tar -czf /backup/pathnex-logs-$(date +%F).tar.gz /var/log
+echo "Logs are Archived"
+
+# Rollback simulation
+
+## 🔹 Jenkins Pipeline — Rollback on Failure
+You will learn how to **simulate rollback if deployment fails**.
+
+pipeline {
+  agent any
+  environment {
+    INSTITUTE_NAME = "Pathnex"
+  }
+
+  stages {
+    stage('Checkout') {}
+    stage('Build') {}
+    stage('Deploy') {
+      steps {
+        script {
+          try {
+            sh 'echo "Deloying $INSTITUTE_NAME application"'
+            sh 'exit 1' // simulate failure
+          }
+          catch(Exception e) {
+            echo "Deployment failed. Rolling back $INSTITUTE_NAME application"
+          }
+        }
+      }
+    }
+  }
+}
+
+## GitLab CI — Rollback Simulation
+You will learn how to **simulate rollback using after_script**.
+
+stages:
+  - deploy
+
+variables:
+  INSTITUTE_NAME = "Pathnex"
+
+deploy:
+  stage: deploy
+  image: maven3.8.1-jdk-17
+  script:
+    - echo "Deploying $INSTITUTE_NAME application"
+    - exit 1 //simulate deployment failure
+  
+  after_script:
+    - echo "Deployment Failed. Rolling back $INSTITUTE_NAME deployment"
