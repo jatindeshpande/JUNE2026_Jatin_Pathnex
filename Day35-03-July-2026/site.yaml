@@ -1,0 +1,7 @@
+---
+- name: Install Apache nginx using Roles
+  hosts: all
+  become: true
+
+  roles:
+    - pathnex
