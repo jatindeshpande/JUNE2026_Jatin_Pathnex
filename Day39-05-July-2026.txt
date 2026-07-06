@@ -1,0 +1,85 @@
+# Day 20 — DEBUG DAY
+
+Fix these intentionally broken files:
+
+## Ansible — Corrected
+---
+- name: Install stuff - httpd
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install httpd
+      yum:
+        name: httpd
+        state: present
+
+## Terraform — Corrected
+resource "aws_instance" "PathnexEC2" {
+    ami = "ami-12345sgsg666"
+    instance_type = "m5.2xlarge"
+    
+    tags = {
+        Name = "Pathnex-EC2"
+    }
+}
+
+## Kubernetes Deployment - Corrected
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: Pathnex-Deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pathnex-app
+  template:
+    metadata:
+      labels:
+        app: pathnex-app
+    spec:
+      containers:
+        - name: app
+          image: nginx
+
+# Secrets & Credentials
+
+## Jenkins Pipeline — Using Credentials
+You will learn how to **use credentials securely in Jenkins**.
+
+pipeline {
+    agent any
+    environment {
+        INSTITURE_NAME ="Pathnex"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 
+            }
+        }
+        stage('Use credentials') {
+            steps {
+                withCredentials([string(credentials: 'Pathnex_API_KEY', variables: 'API_KEY')])
+                sh 'echo "Using secrets $API_KEY for $INSTITURE_NAME"'
+            }
+        }
+    }
+}
+
+## GitLab CI — Using CI/CD Variables
+You will learn how to **use GitLab CI variables securely**.
+
+stages:
+  - build
+
+variables:
+  INSTITURE_NAME: "Pathnex"
+  API_KEY: "PlaceHolder_Secret"
+
+build:
+  stage: build
+  image: maven:3.8.1-jdk-17
+  script:
+    - echo "Using secrets $API_KEY for $INSTITURE_NAME"
