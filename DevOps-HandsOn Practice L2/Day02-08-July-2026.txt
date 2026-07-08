@@ -1,0 +1,75 @@
+# Day 02 — Services & Tags
+
+## Ansible — Install & Enable Nginx
+
+---
+- name: Install and start nginx using Ansible
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install nginx
+      yum:
+        - name: nginx
+          state: present
+
+  tasks:
+    - name: Enable nginx service
+      service:
+        - name: nginx
+          state: started
+          enabled: yes
+
+## Terraform — EC2 with Tags (r5.2xlarge)
+
+provider "aws" {
+    aws_region = "us-east-2"
+}
+
+resource "aws_instance" "PathnexEC2" {
+    ami = "ami-1234566ssfsf555"
+    instance_type = "r5.2xlarge"
+
+    tags = {
+        Name = "Pathnex-EC2"
+        Environment = "Prod"
+        Owner = "Pathnex Student"
+    }
+}
+
+# Kubernetes — Deployment with 2 Replicas
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pathnex-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pathnex-app
+  template:
+    metadata:
+      labels:
+        app: pathnex-app
+    spec:
+      containers:
+        - name: app
+          image: nginx
+          ports:
+            - containerPort: 80
+
+# Shell Script — Disk Usage
+
+#!/bin/bash
+df -h
+
+# Docker Images & Containers
+docker pull ubuntu
+docker Images
+docker ps -a
+
+# DockerFile
+FROM ubuntu:22.04
+RUN apt Install
+CMD["echo", "Hello Pathnex"]
