@@ -1,0 +1,124 @@
+# Day 23 — Tags, EIP, HPA, Kill Process
+
+## Ansible — Add Tags to Users
+
+---
+- name: Install nginx and add Users
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install nginx
+      yum: 
+        name: nginx
+        state: present
+      tags:
+        - nginx
+
+    - name: Add user
+      user:
+        name: devuser
+        comment: "Pathnex Developer User"
+      tags:
+        - user
+
+Now here if someone wants to run this ansible playbook user creation they will run using
+> ansible-playbook playbook.yml --tags user
+
+## Terraform — Elastic IP
+
+resource "aws_eip" "ElasticIP" {
+    instance = aws_instance.PathnexEC2.id
+
+    tags = {
+        Name = "PathnexEIP"
+        Environment = "Production"
+    }
+}
+
+## Kubernetes — Horizontal Pod Autoscaler (HPA)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: pathnex-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: pathnex-deployment
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resources
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+
+## Shell Script — Kill High CPU Process
+
+#!/bin/bash
+
+PID=(ps aux --sort=-%cpu | awk 'NR==2{print $2}')
+
+echo "Killing Process: $PID"
+kill -9 $PID
+
+
+# Docker Integration
+
+## Jenkins Pipeline — Build Docker Image
+You will learn how to **build and tag Docker images** with proper labels.
+
+pipeline {
+    agent any
+    environment {
+        INSTITUTE_NAME = "Pathnex"
+        TEAM = "DevOps"
+        ENV = "staging"
+        PROJECT = "webapp"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/Pathnex/sample-java-app.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''
+                docker build -t pathnex/webapp:${ENV}-${BUILD_NUMBER} \
+                --label "INSTITUTE_NAME=$INSTITUTE_NAME" \
+                --label "TEAM=$TEAM" \
+                --label "ENV=$ENV" \
+                --label "PROJECT=$PROJECT" \ .
+                '''
+            }
+        }
+    }
+}
+
+## GitLab CI — Build Docker Image
+You will learn how to **build Docker images in GitLab CI**.
+
+stages:
+  - docker-build
+
+variables:
+  INSTITUTE_NAME: "Pathnex"
+  TEAM: "DevOps"
+  ENV: "Staging"
+  PROJECT: "webapp"
+
+build:
+  stage: docker-build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t pathnex/webapp:${ENV}-${CI_PIPELINE_ID} \
+      --label "INSTITUTE_NAME=$INSTITUTE_NAME" \
+      --label "TEAM=$TEAM" \
+      --label "ENV=$ENV" \
+      --label "PROJECT=$PROJECT" \ .
