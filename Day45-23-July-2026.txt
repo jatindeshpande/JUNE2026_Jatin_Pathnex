@@ -1,0 +1,108 @@
+# Day 26 — Packages + Services, R53 Record, InitContainer, Status Script
+
+## Ansible — Install + Start Multiple Services
+
+---
+- name: Install and enable servies
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install httpd, firewalld
+      yum:
+        name: 
+          - httpd
+          - firewalld
+        state: present
+
+    - name: Enable the services
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - firewalld
+
+## Terraform — Route53 Record
+resource "aws_route53_record" "PathnexRecord" {
+    zone_id = "Z0FAF5515554123666"
+    name   = "app.pathnex.com"
+    type   = "A"
+    ttl    = 300
+    records = [aws_eip.PathnexEIP.public_ip]
+}
+
+## Kubernetes — Init Container
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-container
+spec:
+  InitContainers:
+    - name: setup
+      image: busybox
+      commands: ["sh" "-c" "echo Initializing; sleep 10"] 
+  containers:
+    - name: main
+      image: nginx
+
+## Shell Script - System Status
+
+#!/bin/bash
+echo "Hostname: $(hostname)"
+echo "Uptime: $(uptime)"
+echo "IP: $(hostname -I)"
+
+# GitLab Dynamic Environments
+
+## Jenkins Pipeline — Deploy to Dynamic Environment
+You will learn how to ** simulate deployment  to dynamic environment variables
+
+pipeline {
+  agent any
+  environment {
+    INSTITUTE_NAME = "Pathnex"
+    TEAM = "DevOps"
+  }
+  parameters {
+    string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Deployment Environment')
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        git URL: 'https://github.com/Pathnex/sample-java-app.git' branch: $ENVIRONMENT
+      }
+    }
+    stage('Build') {
+      steps {
+        mvn clean compile
+      }
+    }
+    stage('Checkout') {
+      steps {
+        sh 'echo "Deploying $INSTITUTE_NAME in $ENVIRONMENT" environment by $TEAM'
+      }
+    }
+  }
+}
+
+## GitLab CI — Dynamic Environment Deployment
+You will learn how to **use GitLab dynamic environment names with realistic tags**.
+
+stages:
+  - deploy
+
+variables:
+  - INSTITUTE_NAME: "Pathnex"
+  - TEAM: "DevOps"
+
+deploy:
+  stage: deploy
+  image: maven:3.8.1-jdk-17
+  environment:
+    - name: $CI_COMMIT_REF_NAME
+    - URL: http://$CI_COMMIT_REF_NAME.pathnex.com
+  script:
+    - echo "Deploying $INSTITUTE_NAME in $CI_COMMIT_REF_NAME env by $TEAM team"

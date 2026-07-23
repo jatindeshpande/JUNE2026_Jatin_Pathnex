@@ -1,0 +1,104 @@
+# Day 05 — Advanced CI/CD and Infrastructure Provisioning
+
+## Jenkinsfile — With Git Integration and Testing
+
+```groovy
+
+pipeline {
+    agent any
+    environment {
+        ENVIROMENT = "Production"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/pathnex/sample-repo.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Build the project from Git repository'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running unit tests'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application'
+            }
+        }
+    }
+}
+
+## GitLab CI/CD — With Docker Build
+
+stages:
+  - build
+  - push
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t pathnex-app
+
+push:
+  stage: push
+  script: 
+    - docker push pathnex-app
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl apply -f manifest/deployment.yaml
+
+## Ansible — Create User and Set Permissions
+---
+- name: Create a user and set permissions
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create user
+      user:
+        name: pathnex
+        state: present
+        shell: /bin/bash
+
+    - name: Set permissions for the user
+      file:
+        path: /home/pathnex
+        owner: pathnex
+        group: pathnex
+        mode: '0755'
+
+## Terraform — EC2 with Tags and Volume
+
+resource "aws_instance" "pathnex-ec2" {
+    ami = "ami-123456555sss55"
+    instance_type = "m5.xlarge"
+
+    tags = {
+        Name = "Pathnex-EC2"
+    }
+
+    ebs_block_device {
+        device_name = "/dev/sdh"
+        volume_size = 50
+    }
+}
+
+## Docker
+## Python application
+print("Hello Pathnex")
+
+FROM python:3.11
+WORKDIR /opt/pathnex/backend-app
+COPY app.py /opt/pathnex/backend-app
+CMD ["app.py" "/opt/pathnex/backend-app/app.py"]
+
+# Real Path
+/opt/pathnex/python-app
