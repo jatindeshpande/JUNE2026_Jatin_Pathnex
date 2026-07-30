@@ -58,24 +58,23 @@ echo "Old logs cleared"
 You will learn how to **write scripted pipelines with conditional logic**.
 
 node {
-  def envName = "dev"
+  envName = "dev"
   env.INSTITUTE_NAME = "Pathnex"
   env.TEAM = "DevOps"
 
   stage('Checkout') {
     git url: 'https://github.com/Pathnex/sample-java-app.git'
   }
-
   stage('Build') {
-    if(envName == "dev") {
-      sh 'echo "Building for $INSTITUTE_NAME app in $envName environment by $TEAM team"'
+    if(envName == 'dev') {
+      sh 'echo "Building for $INSTITUTE_NAME app for $envName environment by $TEAM team"'
     }
     else {
-      sh 'echo "Skipping building the app for the $envName"'
+      sh 'echo "Skipping building $INSTITUTE_NAME in $envName"'
     }
   }
   stage('Deploy') {
-    input message: "Approve the deployment in $envName environment?"
-    sh 'echo "Deploying $INSTITUTE_NAME app in $envName environment by $TEAM"'
+    input message: "Approve deployment for $envName?"
+    sh 'echo "Deploying $INSTITUTE_NAME app in $envName environment by $TEAM team"'
   }
 }
